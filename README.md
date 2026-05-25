@@ -1,50 +1,19 @@
-# Welcome to your Expo app 👋
+# 📱 Money Tracking Application (แอปพลิเคชันบันทึกรายรับรายจ่าย) 💸
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c06c1492-057f-4ce7-8af0-3fecfb0cf036"  width="250"/>
+  <img src="https://github.com/user-attachments/assets/25f45b01-015c-46e3-b87d-2c67fd2f765f" width="250"/>
+   <img src="https://github.com/user-attachments/assets/cf687b0a-303d-4259-ad7a-fcc390c8396f" width="250"/>
+</p>
 
-## Get started
+<p align="center">
+  <img  src="https://github.com/user-attachments/assets/4926ca23-5c94-4d15-8d81-fcabc5056676" width="250"/>
+   <img src="https://github.com/user-attachments/assets/58cd3347-be87-4032-99da-4f315b69f5ed" width="250"/>
+</p>
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 👤 จัดทำโดย
+* **ชื่อ-นามสกุล:** อัจฉรา พิเดช (Ajchara Pidech)
+* **รหัสนักศึกษา:** 6852D10034
+* **สถาบัน:** มหาวิทยาลัยเอเชียอาคเนย์ (SAU)
