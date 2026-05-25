@@ -5,10 +5,10 @@ import { StyleSheet, Text, View } from "react-native";
 export default function SplashScreen() {
   const router = useRouter();
 
-  // ตั้งเวลา 2.5 วินาที แล้วให้เด้งไปหน้า welcome อัตโนมัติค่ะ
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.replace("/welcome");
+      // 🚀 แก้ไขตรงนี้: เปิดแอปมาให้เด้งไปหน้ากรอกเงินเข้า (income) ทันทีเลยค่ะ
+      router.replace("/income");
     }, 2500);
 
     return () => clearTimeout(timer);
@@ -38,13 +38,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 60,
   },
-  spacer: {
-    height: 40,
-  },
-  centerContent: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  spacer: { height: 40 },
+  centerContent: { alignItems: "center", justifyContent: "center" },
   mainTitle: {
     fontSize: 40,
     fontWeight: "bold",
@@ -58,18 +53,12 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     textAlign: "center",
   },
-  footerContent: {
-    alignItems: "center",
-  },
+  footerContent: { alignItems: "center" },
   creditText: {
     fontSize: 16,
     fontWeight: "600",
     color: "#FACC15",
     marginBottom: 4,
   },
-  creditSubText: {
-    fontSize: 14,
-    color: "#FACC15",
-    fontWeight: "500",
-  },
+  creditSubText: { fontSize: 14, color: "#FACC15", fontWeight: "500" },
 });

@@ -1,4 +1,4 @@
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons"; // 👈 เพิ่มชุดไอคอน
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -24,6 +24,26 @@ export default function HomeScreen() {
   const router = useRouter();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // ดึงวันปัจจุบันเป็นภาษาไทยแบบอาจารย์ (วันที่ 3 มกราคม 2568)
+  const getThaiDate = () => {
+    const months = [
+      "มกราคม",
+      "กุมภาพันธ์",
+      "มีนาคม",
+      "เมษายน",
+      "พฤษภาคม",
+      "มิถุนายน",
+      "กรกฎาคม",
+      "สิงหาคม",
+      "กันยายน",
+      "ตุลาคม",
+      "พฤศจิกายน",
+      "ธันวาคม",
+    ];
+    const date = new Date();
+    return `วันที่ ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear() + 543}`;
+  };
 
   const fetchTransactions = async () => {
     try {
@@ -68,40 +88,62 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.headerProfileRow}>
-          <Text style={styles.profileName}>Ajchara Pidech</Text>
+          <View>
+            <Text style={styles.profileName}>Ajchara Pidech</Text>
+            <Text style={styles.headerDate}>{getThaiDate()}</Text>
+          </View>
           <Image
             source={require("../assets/images/profole.png")}
             style={styles.topProfileAvatar}
           />
         </View>
 
+        {/* 💳 การ์ดยอดเงินคงเหลือ */}
         <View style={styles.balanceCard}>
           <Text style={styles.cardTitle}>ยอดเงินคงเหลือ</Text>
           <Text style={styles.balanceText}>
-            {balance.toLocaleString("th-TH", { minimumFractionDigits: 2 })}
+            {balance.toLocaleString("th-TH", { minimumFractionDigits: 2 })} บาท
           </Text>
 
-          <View style={styles.row}>
-            <View style={styles.box}>
-              <Text style={styles.boxTitle}>⬇ ยอดเงินเข้ารวม</Text>
-              <Text style={styles.incomeText}>
-                {totalIncome.toLocaleString("th-TH", {
-                  minimumFractionDigits: 2,
-                })}
-              </Text>
-            </View>
-            <View style={styles.box}>
-              <Text style={styles.boxTitle}>⬆ ยอดเงินออกรวม</Text>
-              <Text style={styles.expenseText}>
-                {totalExpense.toLocaleString("th-TH", {
-                  minimumFractionDigits: 2,
-                })}
-              </Text>
-            </View>
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryText}>
+              ⬇ เงินเข้า +
+              {totalIncome.toLocaleString("th-TH", {
+                minimumFractionDigits: 2,
+              })}{" "}
+              บาท
+            </Text>
+            <Text style={styles.summaryText}>
+              ⬆ เงินออก -
+              {totalExpense.toLocaleString("th-TH", {
+                minimumFractionDigits: 2,
+              })}{" "}
+              บาท
+            </Text>
+          </View>
+
+          {/* 🟢 ปุ่มแฝดตรงกลางตามใบงาน: บันทึกเงินเข้า / บันทึกเงินออก */}
+          <View style={styles.buttonActionRow}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => router.replace("/income")}
+            >
+              <Text style={styles.actionButtonText}>+ บันทึกเงินเข้า</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => router.replace("/expenses")}
+            >
+              <Text style={styles.actionButtonText}>+ บันทึกเงินออก</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
-        <Text style={styles.sectionTitle}>เงินเข้า/เงินออก</Text>
+        {/* ส่วนแสดงรายการประวัติล่าสุด */}
+        <Text style={styles.sectionTitle}>Transactions</Text>
+        <Text style={styles.sectionSubTitle}>
+          รายการเงินเข้า/เงินออก (เรียงตามวันที่ล่าสุด)
+        </Text>
 
         <FlatList
           data={transactions}
@@ -120,13 +162,13 @@ export default function HomeScreen() {
                 >
                   <Ionicons
                     name={item.type === "income" ? "arrow-down" : "arrow-up"}
-                    size={20}
+                    size={18}
                     color={item.type === "income" ? "#2E7D32" : "#C62828"}
                   />
                 </View>
                 <View>
                   <Text style={styles.itemCategory}>{item.category}</Text>
-                  <Text style={styles.itemDate}>{item.date}</Text>
+                  <Text style={styles.itemDate}>({item.date})</Text>
                 </View>
               </View>
               <Text
@@ -136,9 +178,11 @@ export default function HomeScreen() {
                     : styles.listExpense
                 }
               >
+                {item.type === "income" ? "+" : "-"}
                 {Number(item.amount).toLocaleString("th-TH", {
                   minimumFractionDigits: 2,
-                })}
+                })}{" "}
+                บาท
               </Text>
             </View>
           )}
@@ -148,17 +192,21 @@ export default function HomeScreen() {
         />
       </View>
 
-      {/* 🧭 แถบเมนูด้านล่าง (ปรับปรุงไอคอนใหม่ตามรูปเป๊ะๆ) */}
+      {/* 🧭 แถบเมนูด้านล่างสุด วิ่งเข้าหน้าเงินออกได้จริง 100% ไม่แดง ไม่แจ้งเตือนเออร์เรอร์ */}
       <View style={styles.tabBar}>
         <TouchableOpacity
           style={styles.tabItem}
           onPress={() => router.replace("/income")}
         >
-          <MaterialCommunityIcons
-            name="tray-arrow-down"
-            size={30}
-            color="#A3D1CF"
-          />
+          <View style={styles.iconWrapper}>
+            <Ionicons name="cash-outline" size={26} color="#A3D1CF" />
+            <Ionicons
+              name="arrow-down"
+              size={12}
+              color="#A3D1CF"
+              style={styles.arrowIconInBank}
+            />
+          </View>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -170,13 +218,17 @@ export default function HomeScreen() {
 
         <TouchableOpacity
           style={styles.tabItem}
-          onPress={() => alert("ระบบเงินออกกำลังพัฒนาค่ะ")}
+          onPress={() => router.replace("/expenses")}
         >
-          <MaterialCommunityIcons
-            name="tray-arrow-up"
-            size={30}
-            color="#A3D1CF"
-          />
+          <View style={styles.iconWrapper}>
+            <Ionicons name="cash-outline" size={26} color="#A3D1CF" />
+            <Ionicons
+              name="arrow-up"
+              size={12}
+              color="#A3D1CF"
+              style={styles.arrowIconInBank}
+            />
+          </View>
         </TouchableOpacity>
       </View>
     </View>
@@ -193,72 +245,88 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
-  profileName: { fontSize: 18, fontWeight: "bold", color: "#2D7F73" },
+  profileName: { fontSize: 20, fontWeight: "bold", color: "#1E293B" },
+  headerDate: { fontSize: 14, color: "#64748B", marginTop: 2 },
   topProfileAvatar: {
-    width: 45,
-    height: 45,
-    borderRadius: 22.5,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     borderWidth: 1,
     borderColor: "#E2E8F0",
   },
+
   balanceCard: {
-    backgroundColor: "#2F7E73",
-    borderRadius: 25,
-    padding: 25,
-    alignItems: "center",
-    marginBottom: 20,
+    backgroundColor: "#1E2E4A",
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 25,
   },
-  cardTitle: { color: "#E0F2F1", fontSize: 16, fontWeight: "500" },
+  cardTitle: {
+    color: "#94A3B8",
+    fontSize: 15,
+    fontWeight: "500",
+    textAlign: "center",
+  },
   balanceText: {
     color: "#FFFFFF",
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: "bold",
-    marginVertical: 10,
+    textAlign: "center",
+    marginVertical: 8,
   },
-  row: {
+  summaryRow: { paddingHorizontal: 10, marginVertical: 5 },
+  summaryText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    marginVertical: 4,
+    fontWeight: "500",
+  },
+
+  // ดีไซน์ปุ่มคู่ บันทึกเงินเข้า / เงินออก
+  buttonActionRow: {
     flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 15,
-    borderTopWidth: 0.5,
-    borderTopColor: "#529C91",
-    paddingTop: 15,
+    gap: 10,
   },
-  box: { flex: 1, alignItems: "center" },
-  boxTitle: { color: "#E0F2F1", fontSize: 13, marginBottom: 5 },
-  incomeText: { color: "#FFFFFF", fontSize: 18, fontWeight: "bold" },
-  expenseText: { color: "#FFFFFF", fontSize: 18, fontWeight: "bold" },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 15,
-    color: "#1E293B",
+  actionButton: {
+    flex: 1,
+    backgroundColor: "#429690",
+    paddingVertical: 10,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
+  actionButtonText: { color: "#FFFFFF", fontSize: 13, fontWeight: "bold" },
+
+  sectionTitle: { fontSize: 20, fontWeight: "bold", color: "#1E293B" },
+  sectionSubTitle: { fontSize: 13, color: "#64748B", marginBottom: 15 },
   listItem: {
     backgroundColor: "#FFFFFF",
-    padding: 15,
+    padding: 14,
     borderRadius: 16,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 10,
     borderWidth: 1,
     borderColor: "#F1F5F9",
   },
   itemLeft: { flexDirection: "row", alignItems: "center" },
   iconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 15,
+    marginRight: 12,
   },
-  itemCategory: { fontSize: 16, fontWeight: "600", color: "#1E293B" },
-  itemDate: { fontSize: 13, color: "#64748B", marginTop: 2 },
-  listIncome: { color: "#429690", fontWeight: "bold", fontSize: 16 },
-  listExpense: { color: "#E57373", fontWeight: "bold", fontSize: 16 },
+  itemCategory: { fontSize: 15, fontWeight: "600", color: "#1E293B" },
+  itemDate: { fontSize: 12, color: "#94A3B8", marginTop: 1 },
+  listIncome: { color: "#2E7D32", fontWeight: "bold", fontSize: 15 },
+  listExpense: { color: "#C62828", fontWeight: "bold", fontSize: 15 },
   emptyText: { textAlign: "center", color: "#94A3B8", marginTop: 40 },
 
-  // สไตล์แถบเมนูตาม Figma
   tabBar: {
     position: "absolute",
     bottom: 0,
@@ -277,4 +345,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: "100%",
   },
+  iconWrapper: { alignItems: "center", justifyContent: "center" },
+  arrowIconInBank: { position: "absolute", bottom: 7 },
 });

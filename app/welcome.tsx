@@ -6,7 +6,8 @@ export default function WelcomeScreen() {
   const router = useRouter();
 
   const handleStart = () => {
-    router.replace("/home");
+    // 🚀 แก้ไขตรงนี้: กดปุ่มแล้วให้เด้งไปหน้ากรอกเงินเข้า (income) ทันที
+    router.replace("/income");
   };
 
   return (
